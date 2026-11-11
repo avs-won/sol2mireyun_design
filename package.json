@@ -1,0 +1,12 @@
+{
+  "name": "mireyun-site",
+  "version": "0.1.0",
+  "private": true,
+  "description": "미래연 그룹 홈페이지 리디자인 — 디자인 시안",
+  "scripts": {
+    "dev": "node dev-server.mjs"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
