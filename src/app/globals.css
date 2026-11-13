@@ -1,0 +1,625 @@
+@import "tailwindcss";
+
+/* =========================================================
+   SOL2 MIREYUN — Design tokens
+   콘셉트 "명세서(The Specification)":
+   특허 도면의 문법(분해도 · 참조번호 · 지시선 · 해칭 · 치수선)을
+   사이트 전체의 시각 언어로 사용한다.
+   색은 기존 브랜드의 네이비 + 브론즈를 계승한 3색 체계.
+   ========================================================= */
+
+@theme {
+  --color-ink: #0c1322;          /* 어두운 장면의 바탕 — 브랜드 네이비를 더 깊게 */
+  --color-ink-2: #131d31;        /* 어두운 장면 위의 면 */
+  --color-navy: #1b2b45;         /* 브랜드 네이비 */
+  --color-paper: #f3efe7;        /* 밝은 장면의 바탕 — 따뜻한 종이색 */
+  --color-bone: #e8e1d3;         /* 밝은 장면의 보조 면 */
+  --color-bronze: #8a6a45;       /* 브랜드 브론즈 — 큰 글자 · 선 */
+  --color-bronze-ink: #6e5334;   /* 밝은 바탕 위 작은 글자용 브론즈 (6.6:1) */
+  --color-bronze-light: #c6ac8b; /* 어두운 바탕 위 브론즈 (8.4:1) */
+  --color-mute: #565e6c;         /* 밝은 바탕 보조 텍스트 (5.8:1) */
+  --color-mute-dark: #9aa3b2;    /* 어두운 바탕 보조 텍스트 (7.2:1) */
+
+  --font-sans: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+  --font-display: var(--font-archivo), "Pretendard Variable", Pretendard, sans-serif;
+  --font-mono: var(--font-plex-mono), "Pretendard Variable", Pretendard, ui-monospace, monospace;
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out-cubic: cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+:root {
+  --gutter: clamp(20px, 5vw, 96px);
+  --header-h: 64px;
+  --section-y: clamp(104px, 13vw, 208px);
+  --hair-light: color-mix(in srgb, var(--color-ink) 14%, transparent);
+  --hair-dark: color-mix(in srgb, var(--color-paper) 14%, transparent);
+  color-scheme: light;
+
+  /* 도면 입체면 톤 — 기본 팔레트는 손으로 맞춘 값 그대로 */
+  --tone-d-top: #16213a; --tone-d-l: #0f182c; --tone-d-r: #0a1221; --tone-d-hot: #1d2b48;
+  --tone-bar-t: #22314f; --tone-bar-l: #142038; --tone-bar-r: #0e182b;
+  --tone-l-top: #f7f4ee; --tone-l-l: #e6dfd0; --tone-l-r: #d9d0be;
+  --tone-g-gt: #f6f2ea; --tone-g-gl: #e2dacb; --tone-g-gr: #d4cab6;
+  --tone-g-ft: #fbf9f4; --tone-g-fl: #e7e0d2; --tone-g-fr: #d8cdb8; --tone-g-sheet: #fffdf8;
+}
+
+/* =========================================================
+   팔레트 시안 (클라이언트 피드백: "색감이 칙칙하다")
+   <html data-palette="a|b|c"> 로 전환. 주소 뒤 ?palette=a 로 바로 열 수 있다.
+   레이아웃 · 모션은 그대로, 색 토큰만 바뀐다.
+   대비: 본문 4.5:1 이상, 큰 글자 · 선은 3:1 이상 (괄호 안 수치)
+   ========================================================= */
+/* A. 맑게 올리기 — 같은 네이비 + 브론즈 체계, 채도와 명도만 올림 */
+:root[data-palette="a"] {
+  --color-ink: #142a5c;          /* 맑은 로열 네이비 (종이 위 13.3:1) */
+  --color-ink-2: #1a3369;
+  --color-navy: #2a4686;
+  --color-paper: #fbfaf7;        /* 거의 흰 종이 */
+  --color-bone: #f1ece2;
+  --color-bronze: #b07a1f;       /* 브론즈 → 밝은 골드 (3.6:1, 큰 글자 · 선) */
+  --color-bronze-ink: #875b10;   /* (5.7:1) */
+  --color-bronze-light: #ecc56e; /* 네이비 위 (8.4:1) */
+  --color-mute: #4a5263;         /* (7.5:1) */
+  --color-mute-dark: #b3bed4;    /* (7.4:1) */
+}
+/* B. 청사진 — 특허 도면의 파랑이 주색, 골드는 보조 */
+:root[data-palette="b"] {
+  --color-ink: #1740a8;          /* 코발트 블루 — 어두운 장면 바탕이자 제목색 (8.8:1) */
+  --color-ink-2: #1d4ab8;
+  --color-navy: #2a57cc;
+  --color-paper: #fdfdfb;
+  --color-bone: #eaf0f9;         /* 청사진 종이처럼 푸른 기가 도는 보조 면 */
+  --color-bronze: #b3762a;       /* (3.7:1, 큰 글자 · 선) */
+  --color-bronze-ink: #8a5514;   /* (6.1:1) */
+  --color-bronze-light: #f5ca72; /* 파랑 위 골드 (5.8:1) */
+  --color-mute: #475268;         /* (7.7:1) */
+  --color-mute-dark: #cfdcf7;    /* (6.5:1) */
+}
+/* C. 도장 한 점 — 네이비는 살짝 밝게 유지, 브론즈 자리에 인주 주홍 */
+:root[data-palette="c"] {
+  --color-ink: #14223d;          /* (14.7:1) */
+  --color-ink-2: #1b2c4d;
+  --color-navy: #24365c;
+  --color-paper: #f8f6f1;
+  --color-bone: #eeeae1;
+  --color-bronze: #d4451c;       /* 인주 주홍 (4.2:1, 큰 글자 · 선) */
+  --color-bronze-ink: #b23a14;   /* (5.5:1) */
+  --color-bronze-light: #ff8f6b; /* 네이비 위 (7.1:1) */
+  --color-mute: #4f5767;         /* (6.7:1) */
+  --color-mute-dark: #a9b2c3;    /* (7.4:1) */
+}
+/* 시안 팔레트에서는 도면 입체면 톤을 토큰에서 계산한다 */
+:root[data-palette] {
+  --tone-d-top: color-mix(in oklab, var(--color-ink), var(--color-navy) 55%);
+  --tone-d-l: color-mix(in oklab, var(--color-ink), var(--color-navy) 20%);
+  --tone-d-r: color-mix(in oklab, var(--color-ink), #000 15%);
+  --tone-d-hot: color-mix(in oklab, var(--color-navy), var(--color-ink) 10%);
+  --tone-bar-t: color-mix(in oklab, var(--color-navy), var(--color-paper) 6%);
+  --tone-bar-l: color-mix(in oklab, var(--color-ink), var(--color-navy) 40%);
+  --tone-bar-r: color-mix(in oklab, var(--color-ink), var(--color-navy) 8%);
+  --tone-l-top: color-mix(in oklab, var(--color-paper), #fff 30%);
+  --tone-l-l: var(--color-bone);
+  --tone-l-r: color-mix(in oklab, var(--color-bone), var(--color-bronze) 12%);
+  --tone-g-gt: color-mix(in oklab, var(--color-paper), #fff 25%);
+  --tone-g-gl: color-mix(in oklab, var(--color-bone), var(--color-ink) 2%);
+  --tone-g-gr: color-mix(in oklab, var(--color-bone), var(--color-bronze) 14%);
+  --tone-g-ft: color-mix(in oklab, var(--color-paper), #fff 55%);
+  --tone-g-fl: var(--color-bone);
+  --tone-g-fr: color-mix(in oklab, var(--color-bone), var(--color-bronze) 11%);
+  --tone-g-sheet: color-mix(in oklab, var(--color-paper), #fff 80%);
+}
+@media (min-width: 1024px) {
+  :root { --header-h: 76px; }
+}
+
+/* ---------- base ---------- */
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+    background: var(--color-ink);
+  }
+  html.lenis, html.lenis body { height: auto; }
+  .lenis.lenis-smooth { scroll-behavior: auto !important; }
+  .lenis.lenis-stopped { overflow: hidden; }
+
+  body {
+    background: var(--color-paper);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-size: 16px;
+    line-height: 1.75;
+    letter-spacing: -0.01em;
+    word-break: keep-all;
+    overflow-wrap: break-word;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: clip;
+    font-feature-settings: "ss05" 1; /* Pretendard: 숫자 1 꼬리 정리 */
+  }
+  @media (min-width: 1024px) {
+    body { font-size: 17px; }
+  }
+  ::selection { background: var(--color-bronze-light); color: var(--color-ink); }
+  :focus-visible { outline: 2px solid var(--color-bronze); outline-offset: 3px; border-radius: 2px; }
+  [data-theme="dark"] :focus-visible { outline-color: var(--color-bronze-light); }
+  [id] { scroll-margin-top: 0; }
+  button { cursor: pointer; }
+  svg { overflow: visible; }
+}
+
+/* ---------- layout primitives ---------- */
+@utility wrap {
+  width: 100%;
+  max-width: 1760px;
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+@utility grid-12 {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: clamp(16px, 2vw, 32px);
+}
+@utility section-y {
+  padding-block: var(--section-y);
+}
+
+/* ---------- 한 화면 섹션 (데스크톱) ----------
+   섹션 하나 = 화면 하나 = 스크롤 넘김(lib/snap.ts) 한 칸.
+   폭 1024px 이상 · 높이 600px 이상에서만. 모바일 · 낮은 화면은 기존 흐름 그대로.
+   scr: 변형은 이 조건에서만 적용되는 클래스 (예: scr:mt-6) */
+@custom-variant scr (@media (min-width: 1024px) and (min-height: 600px));
+@custom-variant noscr (@media not all and (min-width: 1024px) and (min-height: 600px));
+/* 낮은 데스크톱 화면(높이 800px 이하) — 한 화면에 담기 위해 보조 요소를 줄인다 */
+@custom-variant short (@media (min-width: 1024px) and (max-height: 800px));
+:root { --screen-pad: clamp(18px, 3.4vh, 52px); }
+@media (min-width: 1024px) and (min-height: 600px) {
+  /* 제목은 폭뿐 아니라 화면 높이에도 맞춰 줄어든다 */
+  .h-section { font-size: clamp(2rem, min(4.2vw, 6.6vh), 4.25rem); }
+  .h-statement { font-size: clamp(2.25rem, min(5.4vw, 8vh), 6rem); }
+  .screen {
+    min-height: 100svh;
+    padding-block: calc(var(--header-h) + var(--screen-pad)) var(--screen-pad);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+}
+
+/* ---------- typography ---------- */
+@utility mono-label {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  line-height: 1.4;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+@utility display-en {
+  font-family: var(--font-display);
+  font-variation-settings: "wdth" 125;
+  letter-spacing: -0.02em;
+  line-height: 0.9;
+}
+@utility h-section {
+  font-size: clamp(2rem, 4.2vw, 4.25rem);
+  line-height: 1.12;
+  letter-spacing: -0.045em;
+  font-weight: 700;
+}
+@utility h-statement {
+  font-size: clamp(2.25rem, 5.4vw, 6rem);
+  line-height: 1.08;
+  letter-spacing: -0.05em;
+  font-weight: 700;
+}
+@utility body-lead {
+  font-size: clamp(1.0625rem, 1.25vw, 1.3125rem);
+  line-height: 1.72;
+  letter-spacing: -0.015em;
+}
+
+/* 줄 단위 마스크 리빌 — 텍스트가 잘린 틈에서 밀려 올라온다 */
+.mask-line { display: block; overflow: hidden; padding-bottom: 0.06em; margin-bottom: -0.06em; }
+.mask-line > span { display: block; will-change: transform; }
+
+/* ---------- 명세서 장치 ---------- */
+/* 【0001】 문단번호형 섹션 표식 */
+.spec-mark {
+  display: inline-flex; align-items: baseline; gap: 0.75em;
+  font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.06em; font-weight: 500;
+  text-transform: uppercase;
+}
+.spec-mark b { font-weight: 500; color: var(--color-bronze-ink); letter-spacing: 0.02em; }
+[data-theme="dark"] .spec-mark b { color: var(--color-bronze-light); }
+
+/* 도면 모서리 표식 */
+.corner { position: absolute; width: 14px; height: 14px; pointer-events: none; border-color: currentColor; opacity: 0.45; }
+.corner.tl { top: 0; left: 0; border-top: 1px solid; border-left: 1px solid; }
+.corner.tr { top: 0; right: 0; border-top: 1px solid; border-right: 1px solid; }
+.corner.bl { bottom: 0; left: 0; border-bottom: 1px solid; border-left: 1px solid; }
+.corner.br { bottom: 0; right: 0; border-bottom: 1px solid; border-right: 1px solid; }
+
+/* 배경 건축 그리드 (데스크톱) */
+.arch-grid {
+  position: absolute; inset: 0; pointer-events: none;
+  background-image: linear-gradient(to right, var(--grid-c, color-mix(in srgb, var(--color-ink) 5%, transparent)) 1px, transparent 1px);
+  background-size: calc((100% - 2 * var(--gutter)) / 12) 100%;
+  background-position: var(--gutter) 0;
+  mask-image: linear-gradient(to bottom, transparent, #000 12%, #000 88%, transparent);
+}
+
+/* 종이 질감 — 아주 얇게 */
+.grain::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none; opacity: 0.06; mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+}
+
+/* SVG 선: 확대·축소돼도 선 굵기 유지 */
+.fig line, .fig path, .fig polyline, .fig polygon, .fig ellipse, .fig circle, .fig rect { vector-effect: non-scaling-stroke; }
+
+/* ---------- 모션 초기 상태 ----------
+   JS가 켜지고(.js) 모션 감소 설정이 아닐 때만 숨긴다.
+   JS가 4초 안에 시작하지 못하면 .js-fallback이 붙어 전부 보인다. */
+@media (prefers-reduced-motion: no-preference) {
+  .js:not(.js-fallback) [data-a="fade"] { opacity: 0; }
+  .js:not(.js-fallback) [data-a="rise"] { opacity: 0; transform: translateY(24px); }
+  .js:not(.js-fallback) .mask-line[data-a="line"] > span { transform: translateY(108%); }
+  .js:not(.js-fallback) [data-draw] { stroke-dasharray: 1; stroke-dashoffset: 1; }
+  .js:not(.js-fallback) [data-a="fill"] { opacity: 0; }
+  .js:not(.js-fallback) [data-a="scale-x"] { transform: scaleX(0); }
+  .js:not(.js-fallback) [data-a="scale-y"] { transform: scaleY(0); }
+}
+
+/* ---------- 버튼 ---------- */
+.btn {
+  position: relative; display: inline-flex; align-items: center; gap: 14px;
+  height: 56px; padding: 0 26px 0 28px; border-radius: 999px;
+  font-weight: 600; font-size: 16px; letter-spacing: -0.01em; white-space: nowrap;
+  transition: background-color .4s var(--ease-out-expo), color .4s var(--ease-out-expo), border-color .4s var(--ease-out-expo);
+  isolation: isolate; overflow: hidden;
+}
+.btn .btn-label { position: relative; display: inline-block; }
+.btn-solid-bronze { background: var(--color-bronze-light); color: var(--color-ink); }
+.btn-solid-bronze:hover { background: var(--color-paper); }
+.btn-solid-ink { background: var(--color-ink); color: var(--color-paper); }
+.btn-solid-ink:hover { background: var(--color-navy); }
+.btn-ghost { border: 1px solid currentColor; }
+.btn-ghost:hover { background: currentColor; }
+.btn-ghost:hover .btn-label, .btn-ghost:hover .btn-arrow { color: var(--btn-ghost-hover, var(--color-paper)); }
+.btn-arrow { display: inline-flex; width: 22px; height: 22px; overflow: hidden; position: relative; }
+.btn-arrow svg { position: absolute; inset: 0; transition: transform .55s var(--ease-out-expo); }
+.btn-arrow svg:last-child { transform: translateX(-130%); }
+.btn:hover .btn-arrow svg:first-child, a:hover > .btn-arrow svg:first-child { transform: translateX(130%); }
+.btn:hover .btn-arrow svg:last-child, a:hover > .btn-arrow svg:last-child { transform: translateX(0); }
+
+.link-u { position: relative; display: inline-flex; align-items: center; gap: 10px; font-weight: 600; }
+.link-u::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: -4px; height: 1px; background: currentColor;
+  transform-origin: right; transition: transform .6s var(--ease-out-expo);
+}
+.link-u:hover::after { transform: scaleX(0); }
+
+/* ---------- 접근성 ---------- */
+.sr-only-focusable:not(:focus) {
+  position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+}
+
+/* =========================================================
+   HERO
+   ========================================================= */
+.hero-title {
+  font-size: min(13vw, 3.75rem);
+  line-height: 1.06;
+  letter-spacing: -0.055em;
+  font-weight: 300;
+}
+.hero-title b { font-weight: 720; }
+@media (min-width: 640px) { .hero-title { font-size: min(8.6vw, 5.25rem); } }
+@media (min-width: 1024px) { .hero-title { font-size: clamp(3.5rem, 6.1vw, 7.4rem); line-height: 1.02; } }
+@media (min-width: 1024px) and (min-height: 600px) { .hero-title { font-size: clamp(3rem, min(6.1vw, 9.6vh), 7.4rem); } }
+
+.hero-index-item { position: relative; }
+.hero-index-item::before {
+  content: ""; position: absolute; top: -1px; left: 0; right: 12px; height: 1px;
+  background: var(--color-bronze-light); transform: scaleX(0); transform-origin: left;
+  transition: transform .7s var(--ease-out-expo);
+}
+.hero-index-item.is-hot::before { transform: scaleX(1); }
+
+/* =========================================================
+   FIGURES — 특허 도면 스타일
+   ========================================================= */
+.fig { --fig-line: color-mix(in srgb, var(--color-paper) 90%, transparent); --fig-thin: color-mix(in srgb, var(--color-paper) 38%, transparent); --fig-top: var(--tone-d-top); --fig-l: var(--tone-d-l); --fig-r: var(--tone-d-r); --fig-accent: var(--color-bronze-light); }
+.fig-light { --fig-line: color-mix(in srgb, var(--color-ink) 88%, transparent); --fig-thin: color-mix(in srgb, var(--color-ink) 32%, transparent); --fig-top: var(--tone-l-top); --fig-l: var(--tone-l-l); --fig-r: var(--tone-l-r); --fig-accent: var(--color-bronze); }
+
+.fig .po { fill: none; stroke: var(--fig-line); stroke-width: 1.25; stroke-linejoin: round; transition: stroke .5s; }
+.fig .pf-t { fill: var(--fig-top); transition: fill .5s; }
+.fig .pf-l { fill: var(--fig-l); }
+.fig .pf-r { fill: var(--fig-r); }
+.fig .pc path, .fig .pc ellipse { fill: none; stroke: var(--fig-line); stroke-width: 1; }
+.fig .pc .pc-thin { stroke: var(--fig-thin); }
+.fig .pc .pc-strong { stroke: var(--fig-accent); stroke-width: 1.4; }
+.fig .pc .pc-dot { fill: var(--fig-accent); stroke: none; }
+.fig .pc .pc-node { fill: var(--fig-top); stroke: var(--fig-line); }
+.fig .pc .pc-node-hub { fill: var(--fig-accent); stroke: none; }
+.fig .bar-t { fill: var(--tone-bar-t); stroke: var(--fig-line); stroke-width: 1; }
+.fig .bar-l { fill: var(--tone-bar-l); stroke: var(--fig-line); stroke-width: 1; }
+.fig .bar-r { fill: var(--tone-bar-r); stroke: var(--fig-line); stroke-width: 1; }
+.fig .bar:last-child .bar-t { fill: var(--fig-accent); }
+
+.fig .leader { fill: none; stroke: var(--fig-thin); stroke-width: 1; }
+.fig .leader-dot { fill: var(--fig-accent); }
+.fig .ref-no { font-family: var(--font-mono); font-size: 26px; fill: var(--fig-accent); letter-spacing: .02em; transition: font-weight .3s; }
+.fig .ref-ko { font-family: var(--font-sans); font-size: 19px; font-weight: 500; fill: color-mix(in srgb, var(--color-paper) 88%, transparent); letter-spacing: -.02em; }
+.fig .ref-en { font-family: var(--font-mono); font-size: 12px; letter-spacing: .16em; fill: color-mix(in srgb, var(--color-paper) 58%, transparent); }
+.fig .axis { transform-box: fill-box; transform-origin: 50% 100%; }
+.fig .axis-line { stroke: color-mix(in srgb, var(--color-bronze-light) 50%, transparent); stroke-width: 1; stroke-dasharray: 16 5 2 5; }
+.fig .axis-arrow { fill: none; stroke: var(--fig-accent); stroke-width: 1.3; }
+.fig .axis-cap { font-family: var(--font-mono); font-size: 13px; letter-spacing: .24em; fill: var(--fig-accent); }
+
+.fig .pl-c { cursor: default; }
+.fig .pl-c.is-hot .po { stroke: var(--fig-accent); }
+.fig .pl-c.is-hot .pf-t { fill: var(--tone-d-hot); }
+.fig .pl-c.is-hot .ref-no { font-weight: 600; }
+
+@media (max-width: 767.98px) {
+  .hero-fig .ref-ko, .hero-fig .ref-en { display: none; }
+  .hero-fig .ref-no { font-size: 34px; }
+  .hero-fig .axis-cap { font-size: 20px; }
+}
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+.nav-link { position: relative; opacity: .78; transition: opacity .3s; }
+.nav-link:hover, .nav-link.is-current { opacity: 1; }
+.nav-link::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: -6px; height: 1px; background: currentColor;
+  transform: scaleX(0); transform-origin: right; transition: transform .6s var(--ease-out-expo);
+}
+.nav-link:hover::after, .nav-link.is-current::after { transform: scaleX(1); transform-origin: left; }
+.header-current { animation: label-in .6s var(--ease-out-expo); }
+@keyframes label-in { from { opacity: 0; transform: translateY(60%); } to { opacity: .8; transform: none; } }
+
+.menu-bar, .menu-bar::before, .menu-bar::after { display: block; width: 22px; height: 1.5px; background: currentColor; transition: transform .5s var(--ease-out-expo), opacity .3s; }
+.menu-bar { position: relative; background: transparent; }
+.menu-bar::before, .menu-bar::after { content: ""; position: absolute; left: 0; }
+.menu-bar::before { top: -4px; }
+.menu-bar::after { top: 4px; }
+.menu-bar.is-open::before { transform: translateY(4px) rotate(45deg); }
+.menu-bar.is-open::after { transform: translateY(-4px) rotate(-45deg); }
+
+/* =========================================================
+   IDENTITY — Sol2 글리프
+   ========================================================= */
+.glyph-wrap { container-type: inline-size; }
+.glyph {
+  display: flex; align-items: baseline;
+  font-family: var(--font-display); font-variation-settings: "wdth" 125; font-weight: 800;
+  font-size: 35.5cqw; line-height: 0.82; letter-spacing: -0.045em;
+}
+.glyph-part { display: inline-block; }
+/* 그룹 소개 한 화면 — 선언문 · Sol2 글자 크기를 화면 높이에 맞춘다 */
+.id-statement { font-size: clamp(2.1rem, 4.4vw, 4.6rem); line-height: 1.1; letter-spacing: -0.05em; font-weight: 700; }
+@media (min-width: 1024px) and (min-height: 600px) {
+  .id-statement { font-size: clamp(2.1rem, min(4.2vw, 7vh), 4.8rem); }
+  .id-glyph { max-width: min(100%, 66vh); }
+}
+.glyph-two {
+  margin-left: 0.03em;
+  color: transparent;
+  -webkit-text-stroke: 1.5px var(--color-ink);
+  background-image: repeating-linear-gradient(135deg, var(--color-bronze) 0 1.6px, transparent 1.6px 9px);
+  background-size: 120px 120px;
+  -webkit-background-clip: text; background-clip: text;
+}
+
+/* =========================================================
+   SERVICES
+   ========================================================= */
+.svc-panel { display: none; }
+.svc-panel[data-open="true"] { display: block; }
+.svc-btn > span:nth-child(2) { transition: color .4s, transform .7s var(--ease-out-expo); }
+.svc-plus::before, .svc-plus::after {
+  content: ""; position: absolute; left: 50%; top: 50%; width: 14px; height: 1.5px; background: currentColor;
+  translate: -50% -50%; transition: transform .5s var(--ease-out-expo);
+}
+.svc-plus::after { transform: rotate(90deg); }
+.svc-btn[aria-expanded="true"] .svc-plus::after { transform: rotate(0deg); }
+@media (min-width: 1024px) {
+  .svc-btn { color: color-mix(in srgb, var(--color-ink) 56%, transparent); transition: color .4s; }
+  .svc-btn:hover, .svc-btn.is-active { color: var(--color-ink); }
+  .svc-btn.is-active > span:nth-child(2) { transform: translateX(10px); }
+  .svc-btn .mono-label { color: inherit; opacity: .8; }
+  .svc-plus { display: none; }
+  .svc-sheet { background: color-mix(in srgb, var(--color-paper) 55%, transparent); }
+}
+
+.svc-glyph .g-line { fill: none; stroke: var(--fig-line); stroke-width: 1.15; stroke-linejoin: round; }
+.svc-glyph .g-thin { fill: none; stroke: var(--fig-thin); stroke-width: 1; }
+.svc-glyph .g-accent { fill: none; stroke: var(--fig-accent); stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+.svc-glyph .g-sweep { fill: none; stroke: var(--fig-accent); stroke-width: 2.4; opacity: .55; stroke-linecap: round; }
+.svc-glyph .g-dot { fill: var(--fig-accent); stroke: none; }
+.svc-glyph .g-node { fill: var(--color-paper); stroke: var(--fig-line); stroke-width: 1; }
+.svc-glyph .g-gt { fill: var(--tone-g-gt); }
+.svc-glyph .g-gl { fill: var(--tone-g-gl); }
+.svc-glyph .g-gr { fill: var(--tone-g-gr); }
+.svc-glyph .g-ft { fill: var(--tone-g-ft); }
+.svc-glyph .g-fl { fill: var(--tone-g-fl); }
+.svc-glyph .g-fr { fill: var(--tone-g-fr); }
+.svc-glyph .g-ft-accent { fill: var(--color-bronze-light); }
+.svc-glyph .g-sheet { fill: var(--tone-g-sheet); }
+
+/* =========================================================
+   VALUE — 시그니처 장면
+   기본(JS 없음 · 모션 감소): 도면이 붙어 있고 글이 지나가는 레이아웃
+   .v-cinema(데스크톱 + 모션): 화면 고정, 글은 한 자리에서 교체
+   ========================================================= */
+.v-inner { padding-block: var(--section-y); }
+.v-body { margin-top: 2.5rem; }
+.v-figure-wrap {
+  position: sticky; top: var(--header-h); z-index: 10;
+  height: 44svh; margin-inline: calc(var(--gutter) * -1); padding: 12px var(--gutter);
+  background: var(--color-ink);
+}
+.v-block { min-height: 62svh; padding-block: 8svh 4svh; }
+.v-rail { display: none; }
+
+@media (min-width: 1024px) {
+  .v-body { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: 2rem; }
+  .v-figure-wrap {
+    grid-column: 6 / -1; grid-row: 1; align-self: start;
+    top: calc(var(--header-h) + 16px); height: calc(100svh - var(--header-h) - 48px);
+    margin: 0; padding: 0; background: transparent;
+  }
+  .v-stack { grid-column: 1 / span 5; grid-row: 1; }
+  .v-block { min-height: 88svh; display: flex; flex-direction: column; justify-content: center; padding: 0; }
+
+  .v-cinema .v-inner { height: 100svh; display: flex; flex-direction: column; padding-block: calc(var(--header-h) + 28px) 28px; }
+  .v-cinema .v-body { flex: 1; min-height: 0; margin-top: 1.5rem; }
+  .v-cinema .v-figure-wrap { position: relative; top: auto; height: auto; min-height: 0; align-self: stretch; }
+  .v-cinema .v-stack { display: grid; align-self: center; }
+  .v-cinema .v-block { grid-area: 1 / 1; min-height: 0; }
+  .v-cinema .v-rail { display: block; margin-top: 1.25rem; }
+}
+.v-stop.is-on .v-stop-dot { background: var(--color-bronze-light); border-color: var(--color-bronze-light); }
+.v-stop.is-on span:last-child { color: var(--color-paper); }
+
+.v-fig .v-link { fill: none; stroke: color-mix(in srgb, var(--color-bronze-light) 70%, transparent); stroke-width: 1.2; }
+.v-fig .v-hatch { fill: none; stroke: var(--fig-thin); stroke-width: 1; }
+.v-fig .v-claim-line { fill: none; stroke: var(--fig-accent); stroke-width: 1.6; }
+.v-fig .v-wall { fill: none; stroke: var(--fig-line); stroke-width: 1.1; }
+.v-fig .v-wall-back { stroke: var(--fig-thin); }
+.v-fig .v-core ellipse { fill: none; stroke: var(--fig-line); stroke-width: 1.1; }
+.v-fig .v-core .v-core-in { stroke: var(--fig-accent); }
+.v-fig .v-dot { fill: var(--color-paper); }
+.v-fig .v-node-shape { fill: var(--color-ink); stroke: var(--fig-accent); stroke-width: 1.4; }
+.v-fig .v-label { font-family: var(--font-sans); font-size: 17px; font-weight: 600; fill: color-mix(in srgb, var(--color-paper) 90%, transparent); letter-spacing: -.02em; }
+.v-fig .v-label-en { font-family: var(--font-mono); font-size: 12px; letter-spacing: .18em; fill: var(--fig-accent); }
+.v-fig .v-bar-label { font-family: var(--font-sans); font-size: 15px; font-weight: 600; fill: color-mix(in srgb, var(--color-paper) 92%, transparent); letter-spacing: -.02em; }
+.v-fig .v-dim-line { fill: none; stroke: var(--fig-accent); stroke-width: 1.2; }
+.v-fig .leader { fill: none; stroke: var(--fig-thin); stroke-width: 1; }
+@media (max-width: 1023.98px) {
+  .v-fig .v-label { font-size: 26px; }
+  .v-fig .v-bar-label { font-size: 22px; }
+  .v-fig .v-label-en { font-size: 16px; }
+}
+
+/* =========================================================
+   PROCESS — 9단계 로드맵 (계단 단면 + 두 구간 + 구간별 지원)
+   구간 1(원천 기술)은 잉크, 구간 2(상용화)는 브론즈로 구분한다 (색은 팔레트 토큰을 따른다).
+   ========================================================= */
+.pr-stair { height: clamp(230px, 30vh, 320px); }
+@media (min-width: 1024px) and (min-height: 600px) { .pr-stair { height: clamp(160px, 22vh, 290px); } }
+.pr-grid { stroke: color-mix(in srgb, var(--color-ink) 7%, transparent); stroke-width: 1; stroke-dasharray: 2 5; }
+.pr-line { fill: none; stroke-width: 2.5; stroke-linejoin: miter; vector-effect: non-scaling-stroke; transition: opacity .35s; }
+.pr-line-1 { stroke: var(--color-ink); }
+.pr-line-2 { stroke: var(--color-bronze); stroke-width: 3.5; }
+
+.pr-step { color: var(--color-ink); transition: color .35s; }
+.pr-step-no { color: var(--color-mute); }
+.pr-step.is-late .pr-step-no, .pr-phase-2 .pr-step-no { color: var(--color-bronze-ink); }
+
+/* 구간 경계 — 5단계와 6단계 사이 점선 */
+.pr-split {
+  position: absolute; top: 4%; bottom: -20px; width: 1px; margin-left: -0.5px; transform-origin: bottom;
+  background: repeating-linear-gradient(to bottom, var(--color-bronze) 0 4px, transparent 4px 8px);
+}
+
+/* 구간 치수선 — 양끝 눈금 */
+.pr-dim { position: relative; display: block; height: 2px; background: var(--color-ink); transform-origin: left; }
+.pr-dim::before, .pr-dim::after { content: ""; position: absolute; top: -6px; width: 2px; height: 14px; background: inherit; }
+.pr-dim::before { left: 0; }
+.pr-dim::after { right: 0; }
+.pr-phase-2 .pr-dim { background: var(--color-bronze); }
+.pr-bullet { display: inline-block; flex-shrink: 0; width: 7px; height: 7px; transform: translateY(-2px) rotate(45deg); background: var(--color-ink); }
+.pr-phase-2 .pr-bullet { background: var(--color-bronze); }
+.prm-phase.pr-phase-1 { border-top: 3px solid var(--color-ink); }
+.prm-phase.pr-phase-2 { border-top: 3px solid var(--color-bronze); }
+
+/* 구간에 마우스를 올리면 해당 단계만 또렷하게 */
+.pr-board:has(.pr-phase-1:hover) .pr-step.is-late,
+.pr-board:has(.pr-phase-2:hover) .pr-step:not(.is-late) { color: color-mix(in srgb, var(--color-ink) 28%, transparent); }
+.pr-board:has(.pr-phase-1:hover) .pr-line-2,
+.pr-board:has(.pr-phase-2:hover) .pr-line-1 { opacity: .3; }
+
+@media (prefers-reduced-motion: no-preference) {
+  /* 선 굵기를 고정(non-scaling)하면 점선 길이 계산이 어긋나서, 그리기는 clip-path로 드러낸다 */
+  .js:not(.js-fallback) .pr-line { clip-path: inset(-12px 100% -12px -12px); }
+  .js:not(.js-fallback) .pr-split { transform: scaleY(0); }
+  .js:not(.js-fallback) .pr-dim { transform: scaleX(0); }
+}
+
+/* =========================================================
+   REPORT — 분석 렌즈
+   ========================================================= */
+.lens-fig .lens-axes line { stroke: color-mix(in srgb, var(--color-paper) 35%, transparent); stroke-width: 1; }
+.lens-fig .lens-cap { font-family: var(--font-sans); font-size: 12px; fill: color-mix(in srgb, var(--color-paper) 50%, transparent); }
+.lens-fig .lens-dot { fill: var(--color-bronze-light); stroke: var(--color-bronze-light); stroke-width: 1.2; }
+.lens-fig .lens-hist { fill: color-mix(in srgb, var(--color-paper) 10%, transparent); }
+.lens-fig .lens-focus { fill: none; stroke: var(--color-paper); stroke-width: 1; stroke-dasharray: 3 4; }
+.lens-fig .lens-note { font-family: var(--font-sans); font-size: 13px; fill: color-mix(in srgb, var(--color-paper) 70%, transparent); }
+.lens-fig .lens-note-strong { font-weight: 700; fill: var(--color-paper); font-size: 15px; }
+.lens-fig .lens-matrix { stroke: color-mix(in srgb, var(--color-paper) 10%, transparent); stroke-width: 1; }
+.lens-fig .lens-gap { fill: color-mix(in srgb, var(--color-bronze-light) 6%, transparent); stroke: var(--color-bronze-light); stroke-width: 1.2; stroke-dasharray: 5 4; }
+.lens-fig .lens-tower { fill: none; stroke: color-mix(in srgb, var(--color-paper) 25%, transparent); stroke-width: 1; stroke-dasharray: 3 3; }
+.lens-fig .lens-window { fill: color-mix(in srgb, var(--color-bronze-light) 7%, transparent); stroke: none; }
+.lens-fig .lens-now { stroke: var(--color-paper); stroke-width: 1.2; }
+.lens-fig .lens-scan { stroke: var(--color-bronze-light); stroke-width: 1.5; animation: lens-scan 3.2s ease-in-out infinite alternate; }
+@keyframes lens-scan { from { transform: translateX(0); } to { transform: translateX(130px); } }
+.rp-lens:not([data-mode="patrol"]) .lens-scan { animation-play-state: paused; }
+
+/* =========================================================
+   CONTACT — 작성 예정 도면
+   ========================================================= */
+.empty-fig .ef-dash { fill: none; stroke: color-mix(in srgb, var(--color-paper) 60%, transparent); stroke-width: 1.2; stroke-dasharray: 6 6; animation: ef-march 18s linear infinite; }
+.empty-fig .ef-core { stroke: var(--color-bronze-light); }
+.empty-fig .ef-axis { stroke: color-mix(in srgb, var(--color-bronze-light) 50%, transparent); stroke-width: 1; stroke-dasharray: 14 5 2 5; }
+.empty-fig .ef-cap { font-family: var(--font-mono); font-size: 18px; fill: var(--color-bronze-light); }
+@keyframes ef-march { to { stroke-dashoffset: -240; } }
+
+.contact-form input:-webkit-autofill { -webkit-text-fill-color: var(--color-paper); transition: background-color 9999s; }
+
+/* =========================================================
+   LEADERSHIP — 이름 · 경력 타임라인(FIG. 8)
+   기술(외곽선) → 특허(잉크 채움) → IP 사업화(브론즈 채움)로 갈수록 진해진다.
+   ========================================================= */
+.ld-name-text { font-size: clamp(4rem, 10vw, 9rem); }
+@media (min-width: 1024px) and (min-height: 600px) { .ld-name-text { font-size: clamp(3.25rem, min(7.5vw, 10vh), 8.5rem); } }
+
+.cc-lane { height: clamp(46px, 6.3vh, 70px); }
+.cc-guide { height: 0; border-top: 1px dashed color-mix(in srgb, var(--color-ink) 14%, transparent); }
+.cc-bar { transform-origin: left center; border-radius: 2px; }
+.cc-eng .cc-bar { background: var(--color-paper); border: 1.5px solid var(--color-ink); color: var(--color-ink); }
+.cc-law .cc-bar { background: var(--color-ink); color: var(--color-paper); }
+.cc-biz .cc-bar { background: var(--color-bronze-light); color: var(--color-ink); }
+.cc-years { opacity: .7; }
+.cc-detail { opacity: .78; }
+.cc-lead { height: 0; border-top: 2px dotted var(--color-bronze); transform-origin: left; }
+/* 다음 줄로 넘어가는 연결선 — 막대 끝에서 아래 줄 막대 시작까지 */
+.cc-link {
+  top: 86%; height: 28%; width: 0; margin-left: -1px; z-index: 1;
+  border-left: 2px solid var(--color-bronze); transform-origin: top;
+}
+.cc-link::after {
+  content: ""; position: absolute; left: -6px; bottom: -2px; width: 10px; height: 10px;
+  border-right: 2px solid var(--color-bronze); border-bottom: 2px solid var(--color-bronze); transform: rotate(45deg);
+}
+.cc-link-tag {
+  position: absolute; left: 10px; top: 50%; transform: translateY(-50%); white-space: nowrap;
+  font-family: var(--font-mono); font-size: 11px; letter-spacing: .04em; color: var(--color-bronze-ink);
+}
+.cc-axis-rule { height: 1px; background: color-mix(in srgb, var(--color-ink) 55%, transparent); transform-origin: left; }
+.cc-axis-break { width: 14px; height: 9px; margin-left: -7px; margin-top: -4px; background: var(--color-bone); border-inline: 1.5px solid color-mix(in srgb, var(--color-ink) 55%, transparent); transform: skewX(-24deg); }
+.cc-tick::before { content: ""; position: absolute; top: -4px; left: 50%; width: 1px; height: 7px; background: color-mix(in srgb, var(--color-ink) 55%, transparent); }
+.cc-tick.is-first::before { left: 0; }
+.cc-tick.is-last::before { left: auto; right: 0; }
+
+.ld-dialog { max-height: none; border: 1px solid color-mix(in srgb, var(--color-ink) 15%, transparent); box-shadow: 0 24px 64px rgb(0 0 0 / .25); }
+.ld-dialog::backdrop { background: color-mix(in srgb, var(--color-ink) 55%, transparent); backdrop-filter: blur(3px); }
