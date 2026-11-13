@@ -1,0 +1,58 @@
+# 시안 공유 사이트 자동 배포
+# 디자인 작업 브랜치에 push하면 v2를 다시 빌드해서
+# https://avs-won.github.io/sol2mireyun_design/v2/ 를 갱신한다.
+# (gh-pages 브랜치의 /v2/ 만 교체 — 시안 목록과 v1은 그대로)
+
+name: 시안 공유 사이트 배포
+
+on:
+  push:
+    branches: [v2-redesign, main]
+  workflow_dispatch: # Actions 탭에서 수동 실행도 가능
+
+# 연달아 push하면 마지막 것만 배포한다
+concurrency:
+  group: deploy-draft
+  cancel-in-progress: true
+
+permissions:
+  contents: write # gh-pages 브랜치에 커밋하기 위해
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: 소스 가져오기
+        uses: actions/checkout@v4
+
+      - name: Node 준비
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: 패키지 설치
+        run: npm ci
+
+      - name: 공유 사이트(gh-pages) 가져오기
+        uses: actions/checkout@v4
+        with:
+          ref: gh-pages
+          path: _site
+
+      - name: v2 빌드 · 연락처 점검 · 교체
+        run: node scripts/deploy-draft.mjs --user ${{ github.repository_owner }} --repo ${{ github.event.repository.name }} --out _site/v2
+
+      - name: gh-pages에 올리기
+        working-directory: _site
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "바뀐 내용이 없어 배포를 건너뜁니다."
+            exit 0
+          fi
+          git commit -m "시안 v2 자동 배포: ${GITHUB_SHA::7} (${GITHUB_REF_NAME})"
+          git push origin gh-pages
