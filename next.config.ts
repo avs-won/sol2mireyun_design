@@ -16,6 +16,8 @@ const nextConfig: NextConfig = {
         images: { unoptimized: true },
       }
     : {}),
+  // 시안마다 루트 레이아웃이 따로 있어(/ · /v2 · /v3 · /v4) 전역 404는 global-not-found.tsx가 맡는다
+  experimental: { globalNotFound: true },
   turbopack: {
     rules: {
       "*.css": {

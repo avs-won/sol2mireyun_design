@@ -1,0 +1,95 @@
+/* 시안 전환 버튼 — 클래스 이름에 dsw- 접두어를 붙여 각 시안의 스타일과 섞이지 않게 한다 */
+.dsw-root {
+  position: fixed;
+  left: 50%;
+  bottom: max(16px, env(safe-area-inset-bottom));
+  transform: translateX(-50%);
+  z-index: 2147483000;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 4px;
+  border-radius: 999px;
+  background: rgba(10, 14, 24, 0.82);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+  -webkit-backdrop-filter: blur(14px) saturate(140%);
+  backdrop-filter: blur(14px) saturate(140%);
+  font: 500 13px/1 "Pretendard Variable", Pretendard, -apple-system, "Malgun Gothic", sans-serif;
+  letter-spacing: 0;
+  color: #f4f1ea;
+}
+
+.dsw-home,
+.dsw-item {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-width: 44px;
+  min-height: 36px;
+  padding: 0 12px;
+  border-radius: 999px;
+  color: rgba(244, 241, 234, 0.78);
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 180ms ease, color 180ms ease;
+}
+.dsw-home:hover,
+.dsw-item:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+.dsw-home:focus-visible,
+.dsw-item:focus-visible {
+  outline: 2px solid #d9b56f;
+  outline-offset: 2px;
+}
+
+.dsw-item {
+  font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
+  font-size: 13px;
+  letter-spacing: 0.02em;
+}
+
+.dsw-active {
+  background: #d9b56f;
+  color: #11151f;
+  font-weight: 700;
+  cursor: default;
+}
+.dsw-active:hover {
+  background: #d9b56f;
+  color: #11151f;
+}
+
+.dsw-divider {
+  width: 1px;
+  height: 18px;
+  margin: 0 4px;
+  background: rgba(255, 255, 255, 0.18);
+}
+
+.dsw-dot {
+  position: absolute;
+  top: 7px;
+  right: 7px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #e8c37d;
+  box-shadow: 0 0 0 2px rgba(10, 14, 24, 0.82);
+}
+
+@media (max-width: 420px) {
+  .dsw-homeLabel {
+    display: none;
+  }
+}
+
+@media print {
+  .dsw-root {
+    display: none;
+  }
+}

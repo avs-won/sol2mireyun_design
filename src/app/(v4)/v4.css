@@ -1,0 +1,377 @@
+@import "tailwindcss" source(none);
+/* 이 시안에서 쓰는 파일만 훑는다 (다른 시안의 클래스가 섞이지 않게) */
+@source "./";
+@source "../../drafts/v4";
+
+/* =========================================================
+   SOL2 MIREYUN v4 — "Seal / 권리가 되는 순간"
+   ui-ux-pro-max: Legal · IP / Swiss grid + Motion-driven (motion 9)
+   색: 잉크(바탕) · 아이보리(글자) · 골드(강조 — 권리의 '인장')
+   대비: ivory/ink 15.2:1 · mute/ink 7.6:1 · gold/ink 9.1:1
+   ========================================================= */
+
+@theme {
+  --color-ink: #070b14;
+  --color-ink-2: #0c1220;
+  --color-ink-3: #121a2c;
+  --color-ivory: #ece5d6;
+  --color-paper: #f4efe4;
+  --color-mute: #a2a8b5;
+  --color-gold: #d4af6a;
+  --color-gold-2: #f0d8a4;
+  --color-gold-ink: #7a5a22; /* 밝은 바탕 위 골드 글자 (6.1:1) */
+  --color-danger: #f2a39b;
+
+  --font-sans: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+  --font-serif: var(--font-instrument), "Times New Roman", serif;
+  --font-mono: var(--font-plex-mono), ui-monospace, "SFMono-Regular", Consolas, monospace;
+
+  --ease-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-io: cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+:root {
+  --gutter: clamp(20px, 5vw, 80px);
+  --header-h: 68px;
+  --section-y: clamp(96px, 12vw, 184px);
+  --line: rgb(236 229 214 / 0.12);
+  --line-strong: rgb(236 229 214 / 0.24);
+  color-scheme: dark;
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+    scroll-padding-top: var(--header-h);
+    background: var(--color-ink);
+  }
+  body {
+    background: var(--color-ink);
+    color: var(--color-ivory);
+    font-family: var(--font-sans);
+    font-size: 16px;
+    line-height: 1.7;
+    letter-spacing: -0.01em;
+    word-break: keep-all;
+    overflow-wrap: break-word;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: clip;
+  }
+  ::selection {
+    background: var(--color-gold);
+    color: var(--color-ink);
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-gold);
+    outline-offset: 3px;
+  }
+  a,
+  button,
+  summary,
+  label[for],
+  [role="tab"] {
+    cursor: pointer;
+  }
+  img,
+  svg,
+  canvas {
+    display: block;
+  }
+}
+
+/* ---------- 레이아웃 ---------- */
+.wrap {
+  width: 100%;
+  max-width: 1440px;
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+.section {
+  position: relative;
+  padding-block: var(--section-y);
+}
+
+.skip-link {
+  position: fixed;
+  left: 16px;
+  top: -80px;
+  z-index: 200;
+  padding: 12px 16px;
+  background: var(--color-gold);
+  color: var(--color-ink);
+  font-weight: 700;
+  transition: top 200ms var(--ease-expo);
+}
+.skip-link:focus {
+  top: 16px;
+}
+
+/* ---------- 타이포 ---------- */
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-gold);
+}
+.eyebrow::before {
+  content: "";
+  width: 28px;
+  height: 1px;
+  background: currentColor;
+}
+.h-display {
+  font-weight: 800;
+  letter-spacing: -0.045em;
+  line-height: 1.08;
+}
+.h-section {
+  font-size: clamp(34px, 5.2vw, 76px);
+  font-weight: 800;
+  letter-spacing: -0.045em;
+  line-height: 1.12;
+}
+.serif-it {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+}
+.lead {
+  font-size: clamp(17px, 1.35vw, 20px);
+  line-height: 1.75;
+  color: var(--color-mute);
+}
+.num {
+  font-family: var(--font-serif);
+  font-variant-numeric: lining-nums tabular-nums;
+  letter-spacing: -0.02em;
+}
+
+/* 금빛 글자 + 빛이 지나가는 효과 */
+.gold-text {
+  background: linear-gradient(100deg, #b98e45 0%, var(--color-gold) 30%, #fff3d2 48%, var(--color-gold) 62%, #b98e45 100%);
+  background-size: 260% 100%;
+  background-position: 100% 0;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.motion-ok .gold-text.is-sweep {
+  animation: gold-sweep 3.6s var(--ease-io) 0.9s infinite;
+}
+@keyframes gold-sweep {
+  0% { background-position: 100% 0; }
+  45%, 100% { background-position: -60% 0; }
+}
+
+/* 외곽선 글자 (거대한 영문 장면 제목) */
+.outline-word {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 400;
+  line-height: 0.82;
+  letter-spacing: -0.03em;
+  color: transparent;
+  -webkit-text-stroke: 1px rgb(212 175 106 / 0.55);
+}
+
+/* ---------- 버튼 ---------- */
+.btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 52px;
+  padding: 0 26px;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  border-radius: 999px;
+  overflow: hidden;
+  isolation: isolate;
+  transition: color 220ms var(--ease-expo), border-color 220ms var(--ease-expo), transform 220ms var(--ease-expo);
+}
+.btn-gold {
+  background: var(--color-gold);
+  color: var(--color-ink);
+}
+.btn-gold::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--color-gold-2);
+  transform: translateY(101%);
+  transition: transform 420ms var(--ease-expo);
+}
+.btn-gold:hover::before {
+  transform: translateY(0);
+}
+.btn-ghost {
+  border: 1px solid var(--line-strong);
+  color: var(--color-ivory);
+}
+.btn-ghost:hover {
+  border-color: var(--color-gold);
+  color: var(--color-gold-2);
+}
+.btn:active {
+  transform: scale(0.98);
+}
+.btn .arrow {
+  transition: transform 300ms var(--ease-expo);
+}
+.btn:hover .arrow {
+  transform: translateX(4px);
+}
+
+/* ---------- 전역 장식 ---------- */
+.grain {
+  pointer-events: none;
+  position: fixed;
+  inset: -50%;
+  z-index: 90;
+  opacity: 0.06;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 1 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+}
+.motion-ok .grain {
+  animation: grain 0.9s steps(6) infinite;
+}
+@keyframes grain {
+  0% { transform: translate(0, 0); }
+  20% { transform: translate(-3%, 2%); }
+  40% { transform: translate(2%, -3%); }
+  60% { transform: translate(-2%, -1%); }
+  80% { transform: translate(3%, 3%); }
+  100% { transform: translate(0, 0); }
+}
+
+.scroll-progress {
+  position: fixed;
+  inset: 0 0 auto 0;
+  z-index: 70;
+  height: 2px;
+  background: linear-gradient(90deg, var(--color-gold), var(--color-gold-2));
+  transform-origin: 0 50%;
+  transform: scaleX(var(--progress, 0));
+}
+
+.hairline {
+  height: 1px;
+  background: var(--line);
+}
+
+/* 서비스 카드 — 커서를 따라가는 빛 */
+.spot-grid {
+  --mx: -999px;
+  --my: -999px;
+}
+.spot-card {
+  position: relative;
+  background: var(--color-ink-2);
+  isolation: isolate;
+}
+.spot-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: radial-gradient(420px circle at var(--cx, -999px) var(--cy, -999px), rgb(212 175 106 / 0.14), transparent 60%);
+  opacity: 0;
+  transition: opacity 300ms var(--ease-expo);
+}
+.spot-card:hover::before,
+.spot-card:focus-within::before {
+  opacity: 1;
+}
+
+/* 마퀴 (실적 목록이 흘러간다) */
+.marquee {
+  display: flex;
+  width: max-content;
+  gap: 0;
+}
+.motion-ok .marquee {
+  animation: marquee var(--dur, 60s) linear infinite;
+}
+.motion-ok .marquee.rev {
+  animation-direction: reverse;
+}
+.marquee-mask:hover .marquee {
+  animation-play-state: paused;
+}
+@keyframes marquee {
+  to { transform: translateX(-50%); }
+}
+
+/* ---------- 모션 초기 상태 (JS가 켜졌고 모션 허용일 때만 숨긴다) ---------- */
+.hero-curtain {
+  display: none;
+}
+@media (prefers-reduced-motion: no-preference) {
+  html.js:not(.js-fallback) .hero-curtain {
+    display: block;
+  }
+  html.js:not(.js-fallback) [data-hero-fade],
+  html.js:not(.js-fallback) [data-reveal] {
+    opacity: 0;
+  }
+  html.js:not(.js-fallback) [data-split] {
+    visibility: hidden;
+  }
+}
+
+/* 펼침 목록 */
+details > summary {
+  list-style: none;
+}
+details > summary::-webkit-details-marker {
+  display: none;
+}
+details[open] .chev {
+  transform: rotate(45deg);
+}
+.chev {
+  transition: transform 300ms var(--ease-expo);
+}
+
+/* 폼 */
+.field {
+  width: 100%;
+  min-height: 52px;
+  padding: 14px 0;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--line-strong);
+  color: var(--color-ivory);
+  font-size: 16px;
+  transition: border-color 200ms var(--ease-expo);
+}
+.field::placeholder {
+  color: rgb(162 168 181 / 0.6);
+}
+.field:focus {
+  outline: none;
+  border-bottom-color: var(--color-gold);
+}
+.field[aria-invalid="true"] {
+  border-bottom-color: var(--color-danger);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
