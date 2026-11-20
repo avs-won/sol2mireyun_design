@@ -1,13 +1,13 @@
 # 시안 공유 사이트 자동 배포
-# 디자인 작업 브랜치에 push하면 v2를 다시 빌드해서
-# https://avs-won.github.io/sol2mireyun_design/v2/ 를 갱신한다.
-# (gh-pages 브랜치의 /v2/ 만 교체 — 시안 목록과 v1은 그대로)
+# 디자인 작업 브랜치에 push하면 통합 앱(시안 목록 · v2 · v3 · v4)을 다시 빌드해서
+# https://avs-won.github.io/sol2mireyun_design/ 전체를 갱신한다.
+# (gh-pages 브랜치의 예전 /v1/ 은 그대로 둔다)
 
 name: 시안 공유 사이트 배포
 
 on:
   push:
-    branches: [v2-redesign, main]
+    branches: [drafts-unified, main]
   workflow_dispatch: # Actions 탭에서 수동 실행도 가능
 
 # 연달아 push하면 마지막 것만 배포한다
@@ -41,8 +41,8 @@ jobs:
           ref: gh-pages
           path: _site
 
-      - name: v2 빌드 · 연락처 점검 · 교체
-        run: node scripts/deploy-draft.mjs --user ${{ github.repository_owner }} --repo ${{ github.event.repository.name }} --out _site/v2
+      - name: 전체 시안 빌드 · 연락처 점검 · 교체
+        run: node scripts/deploy-draft.mjs --user ${{ github.repository_owner }} --repo ${{ github.event.repository.name }} --out _site
 
       - name: gh-pages에 올리기
         working-directory: _site
@@ -54,5 +54,5 @@ jobs:
             echo "바뀐 내용이 없어 배포를 건너뜁니다."
             exit 0
           fi
-          git commit -m "시안 v2 자동 배포: ${GITHUB_SHA::7} (${GITHUB_REF_NAME})"
+          git commit -m "시안 공유 사이트 자동 배포: ${GITHUB_SHA::7} (${GITHUB_REF_NAME})"
           git push origin gh-pages

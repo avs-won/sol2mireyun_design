@@ -1,5 +1,6 @@
 // 시안 공유용 정적 빌드 (GitHub Pages 등) → out/
-// 사용: node scripts/build-pages.mjs --base /저장소이름/v2 --site https://계정.github.io/저장소이름/v2
+// 사용: node scripts/build-pages.mjs --base /저장소이름 --site https://계정.github.io/저장소이름
+// (통합 앱이라 / 시안 목록 · /v2 · /v3 · /v4 가 한 번에 나온다)
 //
 // - 정적 파일로 내보내므로 문의 API(/api/contact)는 결과물에서 빠진다.
 //   대신 문의 폼은 "시안에서는 발송되지 않음"을 안내한다 (NEXT_PUBLIC_DRAFT=1).
@@ -20,7 +21,7 @@ const arg = (name) => {
 const base = (arg("base") || "").replace(/\/$/, "");
 const site = arg("site") || "";
 if (!base.startsWith("/")) {
-  console.error("--base 는 /로 시작해야 합니다. 예: --base /sol2mireyun_design/v2");
+  console.error("--base 는 /로 시작해야 합니다. 예: --base /sol2mireyun_design");
   process.exit(1);
 }
 
